@@ -1,14 +1,21 @@
 package vn.bachdao.soundcloud.web.rest;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
 public class UserResource {
-    @GetMapping("/users")
-    public String getUser() {
+    private final Logger log = LoggerFactory.getLogger(UserResource.class);
+
+    @PostMapping("/users")
+    public String createUser() {
+        log.debug("A DEBUG MESSAGE");
+        log.info("AN INFO MESSAGE");
+
         return "haha";
     }
 }
