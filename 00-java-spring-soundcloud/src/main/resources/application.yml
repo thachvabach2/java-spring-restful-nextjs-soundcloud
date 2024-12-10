@@ -1,0 +1,14 @@
+spring:
+    application.name: soundcloud
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    datasource:
+        url: jdbc:mysql://localhost:3306/soundcloud
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    output:
+        ansi:
+            enabled: always

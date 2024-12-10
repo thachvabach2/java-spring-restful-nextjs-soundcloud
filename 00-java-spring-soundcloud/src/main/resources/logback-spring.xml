@@ -5,7 +5,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <logger name="root" level="INFO"/>
-    <logger name="vn.bachdao.soundcloud.web.rest" level="DEBUG"/>
+    <logger name="vn.bachdao.soundcloud" level="DEBUG"/>
 
 
     <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->
