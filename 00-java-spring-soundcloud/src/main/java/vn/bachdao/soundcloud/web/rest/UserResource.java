@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import vn.bachdao.soundcloud.domain.User;
 import vn.bachdao.soundcloud.service.UserService;
 import vn.bachdao.soundcloud.web.rest.errors.IdInvalidException;
@@ -29,7 +30,7 @@ public class UserResource {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         log.debug("REST request to create User", user);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.createUser(user));
     }
@@ -43,7 +44,7 @@ public class UserResource {
 
         // check exist id
         if (currentUserOptional.isEmpty()) {
-            throw new IdInvalidException("User với Id =" + reqUser.getId() + " không tồn tại");
+            throw new IdInvalidException("User với Id = " + reqUser.getId() + " không tồn tại");
         }
 
         return ResponseEntity.ok(this.userService.updateUser(reqUser, currentUserOptional.get()));

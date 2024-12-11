@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import vn.bachdao.soundcloud.domain.enumeration.GenderEnum;
@@ -22,8 +23,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "Email không được để trống")
     private String email;
+
+    @NotBlank(message = "Password không được để trống")
     private String password;
+
     private String name;
 
     @Enumerated(EnumType.STRING)
