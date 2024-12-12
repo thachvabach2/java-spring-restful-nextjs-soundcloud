@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 // unable spring security
-@SpringBootApplication(exclude = {
-		org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
-		org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class })
+// @SpringBootApplication(exclude = {
+// 		org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
+// 		org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class })
 
-// @SpringBootApplication
+@SpringBootApplication
 public class SoundcloudApplication {
 
 	public static void main(String[] args) {
