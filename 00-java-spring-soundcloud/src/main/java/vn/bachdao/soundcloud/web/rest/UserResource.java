@@ -24,8 +24,8 @@ import vn.bachdao.soundcloud.web.rest.util.annotation.ApiMessage;
 public class UserResource {
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
 
-    private UserService userService;
-    private PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResource(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
