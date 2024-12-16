@@ -14,27 +14,27 @@ import org.springframework.security.web.savedrequest.RequestCache;
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        RequestCache nullRequestCache = new NullRequestCache();
-        http
-                .csrf(c -> c.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(f -> f.permitAll())
-                // after authentication, always redirect to homepage
-                .requestCache((cache) -> cache
-                        .requestCache(nullRequestCache))
-                // session sử dụng stateless (đang sử dụng mô hình stateless)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                RequestCache nullRequestCache = new NullRequestCache();
+                http
+                                .csrf(c -> c.disable())
+                                .authorizeHttpRequests(authorize -> authorize
+                                                .requestMatchers("/").permitAll()
+                                                .anyRequest().permitAll())
+                                .formLogin(f -> f.disable())
+                                // after authentication, always redirect to homepage
+                                .requestCache((cache) -> cache
+                                                .requestCache(nullRequestCache))
+                                // session sử dụng stateless (đang sử dụng mô hình stateless)
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 }
