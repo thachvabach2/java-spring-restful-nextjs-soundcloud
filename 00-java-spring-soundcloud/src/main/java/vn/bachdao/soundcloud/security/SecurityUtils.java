@@ -44,8 +44,8 @@ public final class SecurityUtils {
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
 
-        // signature = jwk + jwsHeader(header) + claims(payload)
-        // jwk = jwtKey(secret key) + alg
+        // signature = secret key + jwsHeader(header) + claims(payload)
+        // secret key = jwtKey(application) + alg
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
         
     }
