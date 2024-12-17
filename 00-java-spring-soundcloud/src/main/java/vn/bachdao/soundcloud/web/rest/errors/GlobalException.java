@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,12 +17,16 @@ import vn.bachdao.soundcloud.domain.repsonse.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {
-    @ExceptionHandler(value = { IdInvalidException.class })
-    public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException idInvalid) {
+
+    @ExceptionHandler(value = {
+            UsernameNotFoundException.class,
+            BadCredentialsException.class,
+            IdInvalidException.class })
+    public ResponseEntity<RestResponse<Object>> handleException(Exception ex) {
         RestResponse<Object> rs = new RestResponse<>();
         rs.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        rs.setMessage(idInvalid.getMessage());
-        rs.setError("error occurs...");
+        rs.setMessage(ex.getMessage());
+        rs.setError("Exception occurs...");
 
         return ResponseEntity.badRequest().body(rs);
     }

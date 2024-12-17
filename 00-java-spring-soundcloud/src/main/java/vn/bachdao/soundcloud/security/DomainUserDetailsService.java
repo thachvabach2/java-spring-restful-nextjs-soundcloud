@@ -21,8 +21,12 @@ public class DomainUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         vn.bachdao.soundcloud.domain.User user = this.userRepository.findByEmail(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("Username/password không hợp lệ");
+        }
 
         return new User(
                 user.getEmail(),

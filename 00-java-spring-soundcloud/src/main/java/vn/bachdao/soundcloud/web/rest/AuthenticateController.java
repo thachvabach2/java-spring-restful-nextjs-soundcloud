@@ -2,6 +2,7 @@ package vn.bachdao.soundcloud.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import vn.bachdao.soundcloud.security.SecurityUtils;
 import vn.bachdao.soundcloud.web.rest.util.annotation.ApiMessage;
 import vn.bachdao.soundcloud.web.rest.vm.LoginVM;
 
@@ -22,15 +24,18 @@ public class AuthenticateController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticateController.class);
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final SecurityUtils securityUtils;
 
-    public AuthenticateController(AuthenticationManagerBuilder authenticationManagerBuilder) {
-
+    public AuthenticateController(
+            AuthenticationManagerBuilder authenticationManagerBuilder,
+            SecurityUtils securityUtils) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.securityUtils = securityUtils;
     }
 
-    @PostMapping("/authenticate")
-    @ApiMessage("Authentication user")
-    public ResponseEntity<LoginVM> authorize(@Valid @RequestBody LoginVM loginVM) {
+    @PostMapping("/login")
+    @ApiMessage("Login user")
+    public ResponseEntity<String> login(@Valid @RequestBody LoginVM loginVM) {
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginVM.getUsername(),
@@ -38,7 +43,19 @@ public class AuthenticateController {
 
         // Xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // lưu vào Spring security context
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return ResponseEntity.ok(loginVM);
+
+        // create token
+        String access_token = this.securityUtils.createAccessToken(authentication);
+
+        // add header authorization
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(access_token);
+
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .body(access_token);
     }
 }
