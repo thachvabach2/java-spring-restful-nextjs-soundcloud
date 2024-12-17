@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.bachdao.soundcloud.security.SecurityUtils;
+import vn.bachdao.soundcloud.service.dto.ResLoginDTO;
 import vn.bachdao.soundcloud.web.rest.util.annotation.ApiMessage;
 import vn.bachdao.soundcloud.web.rest.vm.LoginVM;
 
@@ -35,7 +36,7 @@ public class AuthenticateController {
 
     @PostMapping("/login")
     @ApiMessage("Login user")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginVM loginVM) {
+    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginVM loginVM) {
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginVM.getUsername(),
@@ -49,13 +50,14 @@ public class AuthenticateController {
 
         // create token
         String access_token = this.securityUtils.createAccessToken(authentication);
+        ResLoginDTO res = new ResLoginDTO();
+        res.setAccessToken(access_token);
 
         // add header authorization
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(access_token);
 
         return ResponseEntity.ok()
-                .headers(httpHeaders)
-                .body(access_token);
+                .body(res);
     }
 }

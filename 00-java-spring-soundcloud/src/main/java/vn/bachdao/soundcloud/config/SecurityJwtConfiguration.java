@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -32,4 +34,20 @@ public class SecurityJwtConfiguration {
         byte[] keyBytes = Base64.from(jwtKey).decode();
         return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityUtils.JWT_ALGORITHM.getName());
     }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(this.getSecretKey())
+                .macAlgorithm(SecurityUtils.JWT_ALGORITHM).build();
+
+        return token -> {
+            try {
+                return jwtDecoder.decode(token);
+            } catch (Exception e) {
+                LOG.error("JWT error {}", e.getMessage());
+                throw e;
+            }
+        };
+    }
+
 }
