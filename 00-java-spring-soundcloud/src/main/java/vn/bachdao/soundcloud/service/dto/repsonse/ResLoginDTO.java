@@ -1,4 +1,4 @@
-package vn.bachdao.soundcloud.service.dto;
+package vn.bachdao.soundcloud.service.dto.repsonse;
 
 import lombok.Getter;
 import lombok.Setter;

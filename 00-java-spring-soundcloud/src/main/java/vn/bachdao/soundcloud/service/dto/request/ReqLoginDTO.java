@@ -1,4 +1,4 @@
-package vn.bachdao.soundcloud.web.rest.vm;
+package vn.bachdao.soundcloud.service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LoginVM {
+public class ReqLoginDTO {
     @NotBlank(message = "Username không được để trống")
     @Size(min = 1, max = 50)
     private String username;

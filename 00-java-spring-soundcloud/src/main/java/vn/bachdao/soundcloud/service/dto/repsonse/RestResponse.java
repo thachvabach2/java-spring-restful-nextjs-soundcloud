@@ -1,4 +1,4 @@
-package vn.bachdao.soundcloud.domain.repsonse;
+package vn.bachdao.soundcloud.service.dto.repsonse;
 
 import lombok.Getter;
 import lombok.Setter;

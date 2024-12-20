@@ -1,4 +1,4 @@
-package vn.bachdao.soundcloud.web.rest.util;
+package vn.bachdao.soundcloud.service.util;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -10,13 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
-import lombok.Setter;
-import vn.bachdao.soundcloud.domain.repsonse.RestResponse;
-import vn.bachdao.soundcloud.web.rest.util.annotation.ApiMessage;
+import vn.bachdao.soundcloud.service.dto.repsonse.RestResponse;
+import vn.bachdao.soundcloud.service.util.annotation.ApiMessage;
 
-@Getter
-@Setter
 @ControllerAdvice
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 

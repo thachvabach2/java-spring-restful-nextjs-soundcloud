@@ -12,6 +12,10 @@ spring:
     output:
         ansi:
             enabled: always
+    data:
+        web:
+            pageable:
+                one-indexed-parameters: true
 
 # ===================================================================
 # JHipster specific properties

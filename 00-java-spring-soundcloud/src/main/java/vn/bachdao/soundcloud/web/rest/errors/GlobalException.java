@@ -13,7 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import vn.bachdao.soundcloud.domain.repsonse.RestResponse;
+import vn.bachdao.soundcloud.service.dto.repsonse.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {

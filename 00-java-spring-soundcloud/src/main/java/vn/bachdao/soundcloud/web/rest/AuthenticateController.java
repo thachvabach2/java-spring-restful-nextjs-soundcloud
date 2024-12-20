@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.bachdao.soundcloud.security.SecurityUtils;
-import vn.bachdao.soundcloud.service.dto.ResLoginDTO;
-import vn.bachdao.soundcloud.web.rest.util.annotation.ApiMessage;
-import vn.bachdao.soundcloud.web.rest.vm.LoginVM;
+import vn.bachdao.soundcloud.service.dto.repsonse.ResLoginDTO;
+import vn.bachdao.soundcloud.service.dto.request.ReqLoginDTO;
+import vn.bachdao.soundcloud.service.util.annotation.ApiMessage;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -36,7 +36,7 @@ public class AuthenticateController {
 
     @PostMapping("/login")
     @ApiMessage("Login user")
-    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginVM loginVM) {
+    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody ReqLoginDTO loginVM) {
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginVM.getUsername(),

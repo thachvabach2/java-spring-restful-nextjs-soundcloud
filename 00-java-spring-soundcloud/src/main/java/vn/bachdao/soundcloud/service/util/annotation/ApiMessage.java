@@ -1,4 +1,4 @@
-package vn.bachdao.soundcloud.web.rest.util.annotation;
+package vn.bachdao.soundcloud.service.util.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
