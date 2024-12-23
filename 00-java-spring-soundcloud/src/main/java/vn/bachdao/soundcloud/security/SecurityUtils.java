@@ -28,6 +28,9 @@ public final class SecurityUtils {
     @Value("${jhipster.security.authentication.jwt.access-token-validity-in-seconds}")
     private long accessTokenValidityInSeconds;
 
+    @Value("${jhipster.security.authentication.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenValidityInSeconds;
+
     public SecurityUtils(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
@@ -45,6 +48,25 @@ public final class SecurityUtils {
             .expiresAt(validity)
             .subject(authentication.getName())
             .claim("auth", authorities)
+            .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
+
+        // signature = secret key + jwsHeader(header) + claims(payload)
+        // secret key = jwtKey(application) + alg
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+
+    public String createRefreshToken(String email) {
+        Instant now = Instant.now();
+
+        Instant validity = now.plus(this.refreshTokenValidityInSeconds, ChronoUnit.SECONDS);
+
+        // @formatter:off
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+            .issuedAt(now)
+            .expiresAt(validity)
+            .subject(email)
             .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

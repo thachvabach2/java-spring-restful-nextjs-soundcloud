@@ -1,5 +1,6 @@
 package vn.bachdao.soundcloud.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,4 +30,7 @@ public class User extends AbstractAuditingEntity {
     private GenderEnum gender;
 
     private String address;
+
+    @Column(columnDefinition = "TEXT")
+    private String refreshToken;
 }

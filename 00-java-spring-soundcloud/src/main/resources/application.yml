@@ -27,4 +27,5 @@ jhipster:
         authentication:
             jwt:
                 base64-secret: MzFhMWIyNDQxYTljM2FmNjE4NWFkNWI4OTIxOWM0NTg4ZjYxYWFmOWY3ZWIwMmRjZTExNGYxMjMxMmIxNGJhOWQ5ZWU0NmM1Y2Q1ZmVmOTliNTc2Njc1ZjdhYmZkYWZjZGMwYThjNGM4MzJhNDk3ZmU5M2Q3ZjA2NzcxM2U3OTU=
-                access-token-validity-in-seconds: 8640000
+                access-token-validity-in-seconds: 300
+                refresh-token-validity-in-seconds: 8640000

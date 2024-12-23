@@ -63,4 +63,10 @@ public class UserService {
     public void deleteUser(long id) {
         this.userRepository.deleteById(id);
     }
+
+    public User updateRefreshToken(String email, String refresh_token) {
+        User currentUser = this.userRepository.findByEmail(email);
+        currentUser.setRefreshToken(refresh_token);
+        return this.userRepository.save(currentUser);
+    }
 }
