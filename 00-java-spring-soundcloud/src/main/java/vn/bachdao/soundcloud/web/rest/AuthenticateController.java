@@ -142,4 +142,33 @@ public class AuthenticateController {
                 .body(res);
 
     }
+
+    @GetMapping("/auth/logout")
+    @ApiMessage("Logout")
+    public ResponseEntity<Void> logout()
+            throws IdInvalidException {
+
+        String email = SecurityUtils.getCurrentUserLogin().isPresent()
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : "";
+
+        if (email.equals("")) {
+            throw new IdInvalidException("Access Token không hợp lệ");
+        }
+
+        // update refresh token = null
+        this.userService.updateRefreshToken(email, null);
+
+        // remove refresh token cookie
+        ResponseCookie deleteCookie = ResponseCookie.from("refresh_token1", null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .body(null);
+    }
 }

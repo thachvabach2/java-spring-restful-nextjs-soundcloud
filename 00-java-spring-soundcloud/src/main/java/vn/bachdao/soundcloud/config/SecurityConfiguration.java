@@ -8,8 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -43,12 +41,12 @@ public class SecurityConfiguration {
                 // tự động extract Bearer token từ header#authorization của request gửi lên
                 // server
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                        .authenticationEntryPoint(customAuthenticationEntryPoint));
 
-                // xử lý exception
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())); // 403
+        // xử lý exception
+        // .exceptionHandling(exceptions -> exceptions
+        // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
+        // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())); // 403
 
         return http.build();
     }
