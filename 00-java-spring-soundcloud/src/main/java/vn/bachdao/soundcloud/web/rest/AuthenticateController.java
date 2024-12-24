@@ -1,7 +1,5 @@
 package vn.bachdao.soundcloud.web.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -32,7 +30,6 @@ import vn.bachdao.soundcloud.web.rest.errors.IdInvalidException;
 @RestController
 @RequestMapping("/api/v1")
 public class AuthenticateController {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticateController.class);
 
     @Value("${jhipster.security.authentication.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenValidityInSeconds;
@@ -143,7 +140,7 @@ public class AuthenticateController {
 
     }
 
-    @GetMapping("/auth/logout")
+    @PostMapping("/auth/logout")
     @ApiMessage("Logout")
     public ResponseEntity<Void> logout()
             throws IdInvalidException {

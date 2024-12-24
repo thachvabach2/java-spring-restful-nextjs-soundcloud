@@ -1,6 +1,7 @@
 package vn.bachdao.soundcloud.service.dto.repsonse.user;
 
 import java.time.Instant;
+import java.util.List;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,4 +23,6 @@ public class ResGetUserDTO {
     private String createdBy;
     private Instant updatedAt;
     private String updatedBy;
+
+    private List<Long> track_ids;
 }

@@ -1,9 +1,14 @@
 package vn.bachdao.soundcloud.domain;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -33,4 +38,8 @@ public class User extends AbstractAuditingEntity {
 
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties(value = { "user" })
+    private List<Track> tracks;
 }
