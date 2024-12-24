@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import vn.bachdao.soundcloud.service.dto.repsonse.RestResponse;
 
@@ -45,5 +46,15 @@ public class GlobalException {
         rs.setError(exception.getBody().getDetail());
 
         return ResponseEntity.badRequest().body(rs);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<RestResponse<Object>> handleNotFoundException(NoResourceFoundException ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
+        res.setMessage(ex.getMessage());
+        res.setError("404 Not Found, URL may not exist ...");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 }

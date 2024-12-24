@@ -25,23 +25,25 @@ public class SecurityConfiguration {
         http
                 .csrf(c -> c.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh", "/v3/api-docs/**",
+                        .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh",
+                                "/v3/api-docs/**", "/storage/**",
                                 "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
                         .anyRequest().authenticated())
+
+                // tự động thêm BearerTokenAuthenticationFilter
+                // tự động extract Bearer token từ header#authorization của request gửi lên
+                // server
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+
                 .formLogin(f -> f.disable())
                 // after authentication, always redirect to homepage
                 .requestCache((cache) -> cache
                         .requestCache(nullRequestCache))
                 // session sử dụng stateless (đang sử dụng mô hình stateless)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // tự động thêm BearerTokenAuthenticationFilter
-                // tự động extract Bearer token từ header#authorization của request gửi lên
-                // server
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint(customAuthenticationEntryPoint));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // xử lý exception
         // .exceptionHandling(exceptions -> exceptions
