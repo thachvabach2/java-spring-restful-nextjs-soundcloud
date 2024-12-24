@@ -1,24 +1,41 @@
 package vn.bachdao.soundcloud.web;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import vn.bachdao.soundcloud.service.StorageService;
+import vn.bachdao.soundcloud.service.FileService;
 
 @RestController
 @RequestMapping("/api/v1")
 public class FileController {
-    private final StorageService storageService;
+    private final FileService fileService;
 
-    public FileController(StorageService storageService) {
-        this.storageService = storageService;
+    @Value("${jhipster.upload-file.base-uri}")
+    private String baseURI;
+
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
     }
 
-    @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("imgUrl") MultipartFile imgUrl) {
-        return "haha";
+    @PostMapping("/files")
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("folder") String folder)
+            throws URISyntaxException, IOException {
+
+        // skip validate
+
+        // create a directory if not exist
+        this.fileService.createDirectory(baseURI + folder);
+
+        // store file
+        this.fileService.store(file, folder);
+
+        return file.getOriginalFilename() + folder;
     }
 }

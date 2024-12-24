@@ -8,12 +8,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class StaticResourcesWebConfiguration implements WebMvcConfigurer {
 
-    @Value("${jhipster.upload-file.base-path}")
-    private String basePath;
+    @Value("${jhipster.upload-file.base-uri}")
+    private String baseURI;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/storage/**")
-                .addResourceLocations(basePath);
+                .addResourceLocations(baseURI);
     }
 }
