@@ -4,8 +4,8 @@
 <configuration scan="true">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <logger name="root" level="INFO"/>
+    <!-- <logger name="root" level="INFO"/>
     <logger name="vn.bachdao.soundcloud" level="DEBUG"/>
-    <logger name="org.springframework.security" level="TRACE"/>
+    <logger name="org.springframework.security" level="TRACE"/> -->
 
 </configuration>

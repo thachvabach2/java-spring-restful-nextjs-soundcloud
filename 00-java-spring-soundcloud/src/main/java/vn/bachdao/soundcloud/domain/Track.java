@@ -1,10 +1,15 @@
 package vn.bachdao.soundcloud.domain;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -31,4 +36,9 @@ public class Track extends AbstractAuditingEntity {
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties(value = { "tracks" })
     private User user;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "genre_track", joinColumns = @JoinColumn(name = "track_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @JsonIgnoreProperties(value = { "tracks" })
+    private List<Genre> genres;
 }
