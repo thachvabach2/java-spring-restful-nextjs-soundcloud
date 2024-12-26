@@ -19,7 +19,10 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import vn.bachdao.soundcloud.domain.Track;
+import vn.bachdao.soundcloud.domain.User;
+import vn.bachdao.soundcloud.security.SecurityUtils;
 import vn.bachdao.soundcloud.service.TrackService;
+import vn.bachdao.soundcloud.service.UserService;
 import vn.bachdao.soundcloud.service.dto.repsonse.ResultPaginationDTO;
 import vn.bachdao.soundcloud.service.dto.repsonse.track.ResCreateTrackDTO;
 import vn.bachdao.soundcloud.service.dto.repsonse.track.ResGetTrackDTO;
@@ -32,16 +35,29 @@ import vn.bachdao.soundcloud.web.rest.errors.IdInvalidException;
 @RequestMapping("/api/v1")
 public class TrackResource {
     private final TrackService trackService;
+    private final UserService userService;
     private final TrackMapper trackMapper;
 
-    public TrackResource(TrackService trackService, TrackMapper trackMapper) {
+    public TrackResource(
+            TrackService trackService,
+            UserService userService,
+            TrackMapper trackMapper) {
         this.trackService = trackService;
+        this.userService = userService;
         this.trackMapper = trackMapper;
     }
 
     @PostMapping("/tracks")
     @ApiMessage("Create a track")
-    public ResponseEntity<ResCreateTrackDTO> createTrack(@Valid @RequestBody Track track) {
+    public ResponseEntity<ResCreateTrackDTO> createTrack(@Valid @RequestBody Track track) throws IdInvalidException {
+        String email = SecurityUtils.getCurrentUserLogin().isPresent()
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : "";
+        if (email.equals("")) {
+            throw new IdInvalidException("Bạn chưa đăng nhập");
+        }
+        User loggedUser = this.userService.getUserByEmail(email);
+        track.setUser(loggedUser);
 
         Track createdTrack = this.trackService.handleCreateTrack(track);
         ResCreateTrackDTO trackDTO = this.trackMapper.trackToResCreateTrackDTO(createdTrack);

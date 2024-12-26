@@ -9,12 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import vn.bachdao.soundcloud.domain.Comment;
 import vn.bachdao.soundcloud.domain.Genre;
 import vn.bachdao.soundcloud.domain.Track;
-import vn.bachdao.soundcloud.domain.User;
+import vn.bachdao.soundcloud.repository.CommentRepository;
 import vn.bachdao.soundcloud.repository.GenreRepository;
 import vn.bachdao.soundcloud.repository.TrackRepository;
-import vn.bachdao.soundcloud.repository.UserRepository;
 import vn.bachdao.soundcloud.service.dto.repsonse.ResultPaginationDTO;
 import vn.bachdao.soundcloud.service.dto.repsonse.track.ResGetTrackDTO;
 import vn.bachdao.soundcloud.service.mapper.TrackMapper;
@@ -22,28 +22,22 @@ import vn.bachdao.soundcloud.service.mapper.TrackMapper;
 @Service
 public class TrackService {
     private final TrackRepository trackRepository;
-    private final UserRepository userRepository;
     private final GenreRepository genreRepository;
+    private final CommentRepository commentRepository;
     private final TrackMapper trackMapper;
 
     public TrackService(
             TrackRepository trackRepository,
-            UserRepository userRepository,
             TrackMapper trackMapper,
-            GenreRepository genreRepository) {
+            GenreRepository genreRepository,
+            CommentRepository commentRepository) {
         this.trackRepository = trackRepository;
-        this.userRepository = userRepository;
         this.trackMapper = trackMapper;
         this.genreRepository = genreRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Track handleCreateTrack(Track track) {
-        // check user
-        Optional<User> userOptional = this.userRepository.findById(track.getUser().getId());
-        if (track.getUser() != null) {
-            track.setUser(userOptional.isPresent() ? userOptional.get() : null);
-        }
-
         if (track.getGenres() != null) {
             List<Long> ids = track.getGenres().stream().map(item -> item.getId()).collect(Collectors.toList());
             List<Genre> dbGenres = this.genreRepository.findByIdIn(ids);
@@ -72,6 +66,10 @@ public class TrackService {
 
         // delete track (inside playlist_track table)
         currentTrack.getPlaylists().forEach(playlist -> playlist.getTracks().remove(currentTrack));
+
+        // delete track from comment table
+        List<Comment> comments = currentTrack.getComments();
+        this.commentRepository.deleteAll(comments);
 
         // delete track from track table
         this.trackRepository.deleteById(id);

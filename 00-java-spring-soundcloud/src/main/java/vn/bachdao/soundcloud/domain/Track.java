@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -46,4 +47,8 @@ public class Track extends AbstractAuditingEntity {
     @ManyToMany(mappedBy = "tracks", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Playlist> playlists;
+
+    @OneToMany(mappedBy = "track", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "track" })
+    private List<Comment> comments;
 }
