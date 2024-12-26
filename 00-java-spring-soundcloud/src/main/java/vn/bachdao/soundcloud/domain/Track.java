@@ -2,6 +2,7 @@ package vn.bachdao.soundcloud.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -41,4 +42,8 @@ public class Track extends AbstractAuditingEntity {
     @JoinTable(name = "genre_track", joinColumns = @JoinColumn(name = "track_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     @JsonIgnoreProperties(value = { "tracks" })
     private List<Genre> genres;
+
+    @ManyToMany(mappedBy = "tracks", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Playlist> playlists;
 }

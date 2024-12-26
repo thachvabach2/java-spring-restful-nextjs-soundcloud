@@ -43,4 +43,8 @@ public class User extends AbstractAuditingEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "user" })
     private List<Track> tracks;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "user" })
+    private List<Playlist> playlists;
 }

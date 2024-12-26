@@ -67,6 +67,13 @@ public class TrackService {
     }
 
     public void handleDeleteTrack(long id) {
+        Optional<Track> trackOptional = this.trackRepository.findById(id);
+        Track currentTrack = trackOptional.get();
+
+        // delete track (inside playlist_track table)
+        currentTrack.getPlaylists().forEach(playlist -> playlist.getTracks().remove(currentTrack));
+
+        // delete track from track table
         this.trackRepository.deleteById(id);
     }
 
