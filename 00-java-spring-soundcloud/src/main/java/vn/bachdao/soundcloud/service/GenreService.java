@@ -1,5 +1,6 @@
 package vn.bachdao.soundcloud.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,7 +9,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.bachdao.soundcloud.domain.Genre;
+import vn.bachdao.soundcloud.domain.Track;
 import vn.bachdao.soundcloud.repository.GenreRepository;
+import vn.bachdao.soundcloud.repository.TrackRepository;
 import vn.bachdao.soundcloud.service.dto.repsonse.ResultPaginationDTO;
 import vn.bachdao.soundcloud.service.mapper.GenreMapper;
 
@@ -16,10 +19,12 @@ import vn.bachdao.soundcloud.service.mapper.GenreMapper;
 public class GenreService {
 
     private final GenreRepository genreRepository;
+    private final TrackRepository trackRepository;
     private final GenreMapper genreMapper;
 
-    public GenreService(GenreRepository genreRepository, GenreMapper genreMapper) {
+    public GenreService(GenreRepository genreRepository, TrackRepository trackRepository, GenreMapper genreMapper) {
         this.genreRepository = genreRepository;
+        this.trackRepository = trackRepository;
         this.genreMapper = genreMapper;
     }
 
@@ -44,10 +49,13 @@ public class GenreService {
         Optional<Genre> genreOptional = this.genreRepository.findById(id);
         Genre currentGenre = genreOptional.get();
 
-        // delete track (inside genre_track table)
-        currentGenre.getTracks().forEach(track -> track.getGenres().remove(currentGenre));
+        // delete genre from track table
+        if (currentGenre.getTracks() != null) {
+            List<Track> tracks = currentGenre.getTracks();
+            this.trackRepository.deleteAll(tracks);
+        }
 
-        this.genreRepository.delete(currentGenre);
+        this.genreRepository.deleteById(id);
     }
 
     public ResultPaginationDTO handleGetAllGenres(Specification<Genre> spec, Pageable pageable) {

@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -39,10 +38,10 @@ public class Track extends AbstractAuditingEntity {
     @JsonIgnoreProperties(value = { "tracks" })
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "genre_track", joinColumns = @JoinColumn(name = "track_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
     @JsonIgnoreProperties(value = { "tracks" })
-    private List<Genre> genres;
+    private Genre genre;
 
     @ManyToMany(mappedBy = "tracks", fetch = FetchType.LAZY)
     @JsonIgnore

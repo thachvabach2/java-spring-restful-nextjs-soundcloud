@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
+import vn.bachdao.soundcloud.domain.Genre;
 import vn.bachdao.soundcloud.domain.Track;
 import vn.bachdao.soundcloud.domain.User;
 import vn.bachdao.soundcloud.security.SecurityUtils;
+import vn.bachdao.soundcloud.service.GenreService;
 import vn.bachdao.soundcloud.service.TrackService;
 import vn.bachdao.soundcloud.service.UserService;
 import vn.bachdao.soundcloud.service.dto.repsonse.ResultPaginationDTO;
@@ -36,20 +38,24 @@ import vn.bachdao.soundcloud.web.rest.errors.IdInvalidException;
 public class TrackResource {
     private final TrackService trackService;
     private final UserService userService;
+    private final GenreService genreService;
     private final TrackMapper trackMapper;
 
     public TrackResource(
             TrackService trackService,
             UserService userService,
+            GenreService genreService,
             TrackMapper trackMapper) {
         this.trackService = trackService;
         this.userService = userService;
+        this.genreService = genreService;
         this.trackMapper = trackMapper;
     }
 
     @PostMapping("/tracks")
     @ApiMessage("Create a track")
     public ResponseEntity<ResCreateTrackDTO> createTrack(@Valid @RequestBody Track track) throws IdInvalidException {
+        // add logged user
         String email = SecurityUtils.getCurrentUserLogin().isPresent()
                 ? SecurityUtils.getCurrentUserLogin().get()
                 : "";
@@ -58,6 +64,13 @@ public class TrackResource {
         }
         User loggedUser = this.userService.getUserByEmail(email);
         track.setUser(loggedUser);
+
+        // check genre exist
+        Optional<Genre> genreOptional = this.genreService.fetchGenreById(track.getGenre().getId());
+        if (genreOptional.isEmpty()) {
+            throw new IdInvalidException("Genre với id = " + track.getGenre().getId() + " không tồn tại");
+        }
+        track.setGenre(genreOptional.get());
 
         Track createdTrack = this.trackService.handleCreateTrack(track);
         ResCreateTrackDTO trackDTO = this.trackMapper.trackToResCreateTrackDTO(createdTrack);

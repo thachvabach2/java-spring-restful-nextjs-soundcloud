@@ -20,6 +20,7 @@ import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import vn.bachdao.soundcloud.domain.Playlist;
 import vn.bachdao.soundcloud.domain.User;
+import vn.bachdao.soundcloud.security.SecurityUtils;
 import vn.bachdao.soundcloud.service.PlaylistService;
 import vn.bachdao.soundcloud.service.UserService;
 import vn.bachdao.soundcloud.service.dto.repsonse.ResultPaginationDTO;
@@ -43,12 +44,15 @@ public class PlaylistResource {
     @ApiMessage("Create a playlist")
     public ResponseEntity<ResPlaylistDTO> createPlaylist(@Valid @RequestBody Playlist playlist)
             throws IdInvalidException {
-        // check user legal
-        Optional<User> userOptional = this.userService.getUserByID(playlist.getUser().getId());
-        if (userOptional.isEmpty()) {
-            throw new IdInvalidException("User với id = " + playlist.getUser().getId() + " không tồn tại");
+        // add logged user
+        String email = SecurityUtils.getCurrentUserLogin().isPresent()
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : "";
+        if (email.equals("")) {
+            throw new IdInvalidException("Bạn chưa đăng nhập");
         }
-        playlist.setUser(userOptional.get());
+        User loggedUser = this.userService.getUserByEmail(email);
+        playlist.setUser(loggedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.playlistService.handleCreatePlaylist(playlist));
     }
@@ -80,7 +84,12 @@ public class PlaylistResource {
 
     @DeleteMapping("/playlists/{id}")
     @ApiMessage("Delete a playlist by id")
-    public ResponseEntity<Void> deletePlaylist(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deletePlaylist(@PathVariable("id") long id) throws IdInvalidException {
+        Optional<Playlist> playlistOptional = this.playlistService.fetchPlaylistById(id);
+        if (playlistOptional.isEmpty()) {
+            throw new IdInvalidException("Playlist với id = " + id + " không tồn tại");
+        }
+
         this.playlistService.handleDeletePlaylist(id);
         return ResponseEntity.ok(null);
     }
