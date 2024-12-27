@@ -50,4 +50,8 @@ public class Track extends AbstractAuditingEntity {
     @OneToMany(mappedBy = "track", fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "track" })
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "track", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Like> likes;
 }
